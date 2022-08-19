@@ -95,21 +95,25 @@ const Main = () => {
         <Nav />
         <MapContainer>
           <MapApi id="map"></MapApi>
-        </MapContainer>
-        <Contents>
-          {/* <Alert>{state.findOf !== '제주특별자치도' ? '위치정보 조회에 실패했습니다 다시 시도해주세요' : `${centerLocation}`}</Alert> */}
           <Alert>
             위치정보 조회에 실패했습니다.
             <br /> 다시 시도해주세요.
           </Alert>
+          {/* <Contents> */}
+          {/* <Alert>{state.findOf !== '제주특별자치도' ? '위치정보 조회에 실패했습니다 다시 시도해주세요' : `${centerLocation}`}</Alert> */}
+          {/* <Alert>
+            위치정보 조회에 실패했습니다.
+            <br /> 다시 시도해주세요.
+          </Alert> */}
           {/* 주소가 입력 된 마커의 경우에만 navigate 되도록 조건문 걸어주기  */}
           <Mark onClick={goToSuccess} />
           {/* <CurrentLocation onClick={currentLocation}>현위치</CurrentLocation> */}
           <SearchLocation>
-            <SearchLocationIcon>O</SearchLocationIcon>
+            {/* <SearchLocationIcon>O</SearchLocationIcon> */}
             <SearchLocationInput value="위치를 검색해주세요 :)" onClick={goToSearch}></SearchLocationInput>
           </SearchLocation>
-        </Contents>
+          {/* </Contents> */}
+        </MapContainer>
       </Container>
     </>
   );
@@ -118,46 +122,52 @@ const Main = () => {
 export default Main;
 
 const Container = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
 `;
 
 const MapContainer = styled.div`
-  z-index: 1;
+  position: absolute;
 `;
 
 const MapApi = styled.div`
+  position: relative;
   width: 100vw;
-  height: calc(100vh - 52px);
+  height: calc(100vh - 90px);
+  z-index: -1;
 `;
 
-const Contents = styled.div`
-  display: flex;
-  width: 100vw;
-  z-index: 9999;
-`;
+// const Contents = styled.div`
+//   position: absolute;
+//   position: relative;
+//   width: 100vw;
+
+//   height: calc(100vh - 90px);
+// `;
 
 const Alert = styled.div`
+  position: absolute;
+  top: 5%;
   display: flex;
   align-items: center;
-  width: 1400px;
+  width: calc(100vw - 20px);
   height: 50px;
-  margin: 10px;
+  margin: 10px 10px 0 10px;
+  padding: 0 20px;
   background-color: #ff5d5d;
   border-radius: 10px;
   color: #ffffff;
   font-size: 12px;
-  padding-left: 10px;
 `;
 
 const Mark = styled.div`
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: red;
   top: 50%;
   left: 50%;
-  z-index: 999;
+  width: 20px;
+  height: 20px;
+  background-color: red;
 `;
 
 const CurrentLocation = styled.button`
@@ -171,15 +181,15 @@ const CurrentLocation = styled.button`
 
 const SearchLocation = styled.div`
   position: absolute;
-  bottom: 1%;
+  bottom: 5%;
   display: flex;
   align-items: center;
-  width: 1400px;
-  height: 60px;
-  margin: 20px;
+  width: calc(100vw - 20px);
+  height: 50px;
+  margin: 0 10px;
+  padding: 0 20px;
   background-color: #ffffff;
   border-radius: 10px;
-  z-index: 999;
 `;
 
 const SearchLocationIcon = styled.div`
