@@ -15,9 +15,9 @@ const Nav = () => {
         <LocationIconContainer>
           <LocationIcon />
         </LocationIconContainer>
-        <LocationText>
+        <LocationText id="centerAddr">
           {/* state.findOf('제주특별자치도') ? {markLocation} : '주소를 찾고있습니다 ...' */}
-          주소를 찾고있습니다.
+          {/* 주소를 찾고있습니다. */}
         </LocationText>
       </Location>
     </Container>
