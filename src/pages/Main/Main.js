@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Nav from '../../components/Nav/Nav';
 
 const Main = () => {
@@ -51,8 +52,6 @@ const Main = () => {
           // 행정동의 region_type 값은 'H' 이므로
           if (result[i].region_type === 'H') {
             infoDiv.innerHTML = result[i].address_name;
-            // setCenterLocation(infoDiv.innerHTML);
-            // console.log(centerLocation);
             break;
           }
         }
@@ -71,12 +70,6 @@ const Main = () => {
   //     center: new kakao.maps.LatLng(33.450701, 126.570667),
   //     level: 3,
   //   };
-
-  //   function locationLoadSuccess(pos) {
-  //     // 현재 위치 받아오기
-  //     var currentPos = new kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-  //     map.panTo(currentPos);
-  //   }
 
   //   function locationLoadError(pos) {
   //     alert('위치 정보를 가져오는데 실패했습니다.');
@@ -111,28 +104,32 @@ const Main = () => {
   //   }
   // });
 
-  const handleCurrentLocation = () => {};
-
-  const goToSuccess = () => {
-    navigate('/success');
+  const handleCurrentLocation = () => {
+    function locationLoadSuccess(pos) {
+      // 현재 위치 받아오기
+      var currentPos = new kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+      map.panTo(currentPos);
+    }
   };
 
-  const goToSearch = () => {
-    navigate('/search');
-  };
+  // const locationLoadSuccess = (pos) => {
+  //   // 현재 위치 받아오기
+  //   var currentPos = new kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+  //   map.panTo(currentPos);
+  // };
 
   return (
     <>
       <Container>
         <Nav />
-        <MapContainer>
+        <Contents>
           <MapApi id="map" />
 
           {/* <Alert alert={centerLocation.indexOf('제주특별자치도') ? 'hi' : 'nohi'}> */}
           <Alert alert={currentLocation.includes('제주특별자치도')}>
-            {currentLocation.includes('제주특별자치도') === true ? '충전 서비스 이용불가! <br />제주도 본섬만 이용 가능합니다' : '위치정보 조회에 실패했습니다.<br /> 다시 시도해주세요.'}
-            {/* 위치정보 조회에 실패했습니다.
-            <br /> 다시 시도해주세요. */}
+            {/* {currentLocation.includes('제주특별자치도') === true ? 충전 서비스 이용불가!<br />제주도 본섬만 이용 가능합니다 : 위치정보 조회에 실패했습니다.<br />다시 시도해주세요.} */}
+            위치정보 조회에 실패했습니다.
+            <br /> 다시 시도해주세요.
           </Alert>
           {/* <Contents> */}
           {/* <Alert>{state.findOf !== '제주특별자치도' ? '위치정보 조회에 실패했습니다 다시 시도해주세요' : `${centerLocation}`}</Alert> */}
@@ -141,14 +138,20 @@ const Main = () => {
             <br /> 다시 시도해주세요.
           </Alert> */}
           {/* 주소가 입력 된 마커의 경우에만 navigate 되도록 조건문 걸어주기  */}
-          <Mark onClick={goToSuccess} />
-          {/* <CurrentLocation onClick={currentLocation}>현위치</CurrentLocation> */}
-          <SearchLocation>
-            {/* <SearchLocationIcon>O</SearchLocationIcon> */}
-            <SearchLocationInput value="위치를 검색해주세요 :)" onClick={goToSearch}></SearchLocationInput>
-          </SearchLocation>
+          <StyledLink to="reserve">
+            {/* <Mark onClick={goToSuccess} /> */}
+            <Mark />
+          </StyledLink>
+          <Current onClick={handleCurrentLocation}>현</Current>
+          <StyledLink to="search">
+            <SearchLocation>
+              {/* <SearchLocationIcon>O</SearchLocationIcon> */}
+              {/* <SearchLocationInput value="위치를 검색해주세요 :)" onClick={goToSearch}></SearchLocationInput> */}
+              <SearchLocationInput value="위치를 검색해주세요 :)" />
+            </SearchLocation>
+          </StyledLink>
           {/* </Contents> */}
-        </MapContainer>
+        </Contents>
       </Container>
     </>
   );
@@ -156,12 +159,14 @@ const Main = () => {
 
 export default Main;
 
+const StyledLink = styled(Link)``;
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
 `;
 
-const MapContainer = styled.div`
+const Contents = styled.div`
   position: relative;
   height: calc(100vh - 90px);
 `;
@@ -173,24 +178,17 @@ const MapApi = styled.div`
   height: calc(100vh - 90px);
 `;
 
-// const CurrentLocation = styled.div`
-//   position: absolute;
-//   left: 10px;
-//   top: 10px;
-//   border-radius: 2px;
-//   background: #fff;
-//   background: rgba(255, 255, 255, 0.8);
-//   z-index: 1;
-//   padding: 5px;
-// `;
-
-// const Contents = styled.div`
-//   position: absolute;
-//   position: relative;
-//   width: 100vw;
-//   height: calc(100vh - 90px);
-// `;
-// color: ${(props) => (props.btnStyle ? ({ theme }) => theme.White : ({ theme }) => theme.Gray[70])};
+const Current = styled.div`
+  position: absolute;
+  right: 5%;
+  bottom: 15%;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  background: #fff;
+  z-index: 100;
+  padding: 5px;
+`;
 
 const Alert = styled.div`
   position: absolute;

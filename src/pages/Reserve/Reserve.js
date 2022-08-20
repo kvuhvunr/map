@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Success = () => {
+const Reserve = () => {
   return <div></div>;
 };
 
-export default Success;
+export default Reserve;

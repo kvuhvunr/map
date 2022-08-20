@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Main from './pages/Main/Main';
-import Success from './pages/Success/Success';
+import Reserve from './pages/Reserve/Reserve';
 import Search from './pages/Search/Search';
 
 const Router = () => {
@@ -10,7 +10,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/success" element={<Success />} />
+        <Route path="/reserve" element={<Reserve />} />
       </Routes>
     </BrowserRouter>
   );
