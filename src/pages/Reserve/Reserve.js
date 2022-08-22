@@ -6,9 +6,19 @@ import { flex } from '../../styles/Mixin';
 
 const Reserve = () => {
   const [map, setMap] = useState({});
+  const [selectLocationData, setSelectLocationData] = useState({});
 
   useEffect(() => {
     selectLocation();
+
+    fetch('서버 URL', {
+      method: 'get',
+      headers: {},
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setSelectLocationData(data);
+      });
   }, []);
 
   const selectLocation = () => {
@@ -21,7 +31,6 @@ const Reserve = () => {
     var map = new kakao.maps.Map(mapContainer, mapOption);
     var markerPosition = new kakao.maps.LatLng(33.450701, 126.570667);
     // Fix me: POST 메서드를 이용해 서버로 전달된 좌표 값을 위의 좌표 값에 기입
-
     var marker = new kakao.maps.Marker({
       position: markerPosition,
     });
@@ -132,9 +141,6 @@ const PhoneAuthInput = styled.input`
 const PhoneAuthButton = styled.button`
   width: 100px;
   height: 34px;
-  /* :disabled { 
-    border: none;
-  } */
   background-color: #5277ff;
   color: #ffffff;
 `;
