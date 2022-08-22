@@ -1,11 +1,7 @@
-import React from 'react';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { flex } from '../../styles/Mixin';
 
 const Nav = () => {
-  const [markLocation, setMarkLocation] = useState('');
-  // 마커로 나타내는 위치의 값을 state로 저장
-
   return (
     <Container>
       <Title>
@@ -15,10 +11,8 @@ const Nav = () => {
         <LocationIconContainer>
           <LocationIcon />
         </LocationIconContainer>
-        <LocationText id="centerAddr">
-          {/* state.findOf('제주특별자치도') ? {markLocation} : '주소를 찾고있습니다 ...' */}
-          {/* 주소를 찾고있습니다. */}
-        </LocationText>
+        <LocationText id="centerAddr" />
+        {/* Fix me: 지도 이동 감지 시 분기 처리를 통해'주소를 찾고 있습니다 ..' 문자 나타내기 */}
       </Location>
     </Container>
   );
@@ -33,9 +27,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flex('center', 'center')};
   height: 52px;
   background-color: #5277ff;
 `;
@@ -47,9 +39,7 @@ const TitleText = styled.span`
 `;
 
 const Location = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flex('center', 'center')};
   height: 40px;
 `;
 
