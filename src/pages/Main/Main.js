@@ -12,10 +12,14 @@ const Main = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    serviceMap();
+  }, [map]);
+
+  const serviceMap = () => {
+    var mapContainer = document.getElementById('map'),
       mapOption = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 2, // 지도의 확대 레벨
+        center: new kakao.maps.LatLng(33.450701, 126.570667),
+        level: 2,
       };
 
     // 지도를 생성합니다
@@ -37,11 +41,6 @@ const Main = () => {
       geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
     }
 
-    function searchDetailAddrFromCoords(coords, callback) {
-      // 좌표로 법정동 상세 주소 정보를 요청합니다
-      geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-    }
-
     // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
     function displayCenterInfo(result, status) {
       if (status === kakao.maps.services.Status.OK) {
@@ -57,66 +56,25 @@ const Main = () => {
         }
       }
     }
-  }, [map]);
-  console.log(currentLocation);
-
-  // useEffect(() => {
-  //   kakaomap();
-  // }, []);
-
-  // function kakaomap() {
-  //   const container = document.getElementById('map');
-  //   const options = {
-  //     center: new kakao.maps.LatLng(33.450701, 126.570667),
-  //     level: 3,
-  //   };
-
-  //   function locationLoadError(pos) {
-  //     alert('위치 정보를 가져오는데 실패했습니다.');
-  //   }
-
-  //   function getCurrentPosBtn() {
-  //     navigator.geolocation.getCurrentPosition(locationLoadSuccess, locationLoadError);
-  //   }
-
-  //   // 지도를 통해서 전달되는 데이터가 제주도라면 마커를 파란색에 이벤트가 가능하도록 적용
-  //   // 그것이 아니라면 그냥 빨간색으로 적용
-
-  //   setMap(new kakao.maps.Map(container, options));
-  // }
-
-  // useEffect(() => {
-  //   function changedCenter() {
-  //     kakao.maps.event.addListener(map, 'center_changed', function () {
-  //       // 지도의  레벨을 얻어옵니다
-  //       var level = map.getLevel();
-
-  //       // 지도의 중심좌표를 얻어옵니다
-  //       var latlng = map.getCenter();
-
-  //       var message = '<p>지도 레벨은 ' + level + ' 이고</p>';
-  //       message += '<p>중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다</p>';
-
-  //       var resultDiv = document.getElementById('result');
-  //       resultDiv.innerHTML = message;
-  //       console.log(message);
-  //     });
-  //   }
-  // });
-
-  const handleCurrentLocation = () => {
-    function locationLoadSuccess(pos) {
-      // 현재 위치 받아오기
-      var currentPos = new kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-      map.panTo(currentPos);
-    }
   };
+
+  // const handleCurrentLocation = () => {
+  function locationLoadSuccess(pos) {
+    // 현재 위치 받아오기
+    var currentPos = new kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+    map.panTo(currentPos);
+  }
+  // };
 
   // const locationLoadSuccess = (pos) => {
   //   // 현재 위치 받아오기
   //   var currentPos = new kakao.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
   //   map.panTo(currentPos);
   // };
+
+  const goToReserve = () => {
+    currentLocation.includes('제주특별자치도') && navigate('/reserve');
+  };
 
   return (
     <>
@@ -138,19 +96,33 @@ const Main = () => {
             <br /> 다시 시도해주세요.
           </Alert> */}
           {/* 주소가 입력 된 마커의 경우에만 navigate 되도록 조건문 걸어주기  */}
-          <StyledLink to="reserve">
-            {/* <Mark onClick={goToSuccess} /> */}
-            <Mark />
+          {/* <Mark onClick={goToSuccess} /> */}
+          {/* <Mark markStyle={currentLocation.includes('제주특별자치도')} onClick={goToReserve} /> */}
+          {currentLocation.includes('제주특별자치도') ? (
+            <ReserveMark onClick={goToReserve}>
+              <ReserveMarkTitle>충전장소로 지정</ReserveMarkTitle>
+            </ReserveMark>
+          ) : (
+            <UnreservedMark />
+          )}
+
+          <StyledLink to="/support">
+            <Support>Sup</Support>
           </StyledLink>
-          <Current onClick={handleCurrentLocation}>현</Current>
-          <StyledLink to="search">
+          <Current
+            onClick={() => {
+              locationLoadSuccess();
+            }}
+          >
+            Cur
+          </Current>
+          <StyledLink to="/search">
             <SearchLocation>
               {/* <SearchLocationIcon>O</SearchLocationIcon> */}
               {/* <SearchLocationInput value="위치를 검색해주세요 :)" onClick={goToSearch}></SearchLocationInput> */}
               <SearchLocationInput value="위치를 검색해주세요 :)" />
             </SearchLocation>
           </StyledLink>
-          {/* </Contents> */}
         </Contents>
       </Container>
     </>
@@ -178,18 +150,6 @@ const MapApi = styled.div`
   height: calc(100vh - 90px);
 `;
 
-const Current = styled.div`
-  position: absolute;
-  right: 5%;
-  bottom: 15%;
-  width: 40px;
-  height: 40px;
-  border-radius: 2px;
-  background: #fff;
-  z-index: 100;
-  padding: 5px;
-`;
-
 const Alert = styled.div`
   position: absolute;
   top: 1%;
@@ -205,35 +165,78 @@ const Alert = styled.div`
   font-size: 12px;
   line-height: 18px;
   z-index: 100;
+  cursor: pointer;
 `;
 
-const Mark = styled.div`
+const UnreservedMark = styled.div`
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   width: 30px;
   height: 30px;
   background-color: red;
   border-radius: 50%;
   z-index: 100;
+  cursor: pointer;
 `;
 
-// const CurrentLocation = styled.button`
-//   position: absolute;
-//   width: 50px;
-//   height: 50px;
-//   bottom: 20%;
-//   right: 5%;
-//   z-index: 999;
-// `;
+const ReserveMark = styled.div`
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 50px;
+  background-color: #5277ff;
+  border-radius: 10px;
+  z-index: 100;
+  cursor: pointer;
+`;
+
+const ReserveMarkTitle = styled.span`
+  color: #ffffff;
+`;
+
+const Support = styled.div`
+  position: absolute;
+  right: 2%;
+  bottom: 22%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #fff;
+  z-index: 100;
+  padding: 5px;
+`;
+
+const Current = styled.div`
+  position: absolute;
+  right: 2%;
+  bottom: 14%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 5px;
+  border-radius: 50%;
+  background: #fff;
+  z-index: 100;
+  cursor: pointer;
+`;
 
 const SearchLocation = styled.div`
   position: absolute;
-  bottom: 3%;
+  bottom: 4%;
   display: flex;
   align-items: center;
   width: calc(100vw - 20px);
-  height: 50px;
+  height: 60px;
   margin: 0 10px;
   padding: 0 20px;
   background-color: #ffffff;
@@ -252,4 +255,5 @@ const SearchLocationInput = styled.input`
   border: none;
   outline: none;
   font-size: 15px;
+  cursor: pointer;
 `;
